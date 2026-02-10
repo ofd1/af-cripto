@@ -2,15 +2,16 @@
 nixPkgs = ["nodejs_20"]
 
 [phases.install]
-cmds = ["npm install --prefix server"]
+cmds = [
+  "npm install --prefix server --include=dev",
+  "npm install --prefix client --include=dev"
+]
 
 [phases.build]
 cmds = [
-  "npm install --prefix client",
   "npm run build --prefix client",
   "cp -r client/dist server/public",
-  "npm run typecheck --prefix server || true",
-  "npx tsc --project server/tsconfig.json",
+  "npx --prefix server tsc --project server/tsconfig.json",
   "cp server/src/db/schema.sql server/dist/db/schema.sql"
 ]
 
