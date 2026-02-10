@@ -8,9 +8,9 @@ router.get('/', async (req: Request, res: Response) => {
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
     const limit = Math.min(50, Math.max(1, parseInt(req.query.limit as string) || 20));
     const offset = (page - 1) * limit;
-    const sourceType = req.query.source_type as string;
-    const tag = req.query.tag as string;
-    const search = req.query.search as string;
+    const sourceType = String(req.query.source_type || '');
+    const tag = String(req.query.tag || '');
+    const search = String(req.query.search || '');
 
     const conditions: string[] = [];
     const params: (string | number)[] = [];
