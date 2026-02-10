@@ -16,7 +16,7 @@ router.get('/', async (req: Request, res: Response) => {
     const params: (string | number)[] = [];
     let paramIdx = 1;
 
-    if (sourceType && sourceType !== 'all') {
+    if (sourceType && sourceType !== 'all' && sourceType !== '') {
       conditions.push(`source_type = $${paramIdx++}`);
       params.push(sourceType);
     }
