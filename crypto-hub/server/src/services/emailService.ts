@@ -1,14 +1,39 @@
-import { Resend } from 'resend';
+import axios from 'axios';
 
-let resend: Resend | null = null;
+const APPS_SCRIPT_URL = process.env.GOOGLE_APPS_SCRIPT_URL;
 
-function getResend(): Resend {
-  if (!resend) {
-    const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) throw new Error('RESEND_API_KEY not configured');
-    resend = new Resend(apiKey);
+interface SendEmailParams {
+  to: string;
+  subject: string;
+  html: string;
+}
+
+export async function sendEmail({ to, subject, html }: SendEmailParams): Promise<{ success: true }> {
+  try {
+    if (!APPS_SCRIPT_URL) {
+      throw new Error('GOOGLE_APPS_SCRIPT_URL não configurada');
+    }
+
+    const response = await axios.post(APPS_SCRIPT_URL, {
+      to,
+      subject,
+      html
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.data.success || response.data.status === 'success') {
+      console.log('✅ Email enviado com sucesso para:', to);
+      return { success: true };
+    } else {
+      throw new Error(response.data.error || 'Erro ao enviar email');
+    }
+  } catch (error: any) {
+    console.error('❌ Erro ao enviar email:', error.message);
+    throw error;
   }
-  return resend;
 }
 
 export async function sendPriceAlert(
@@ -17,7 +42,6 @@ export async function sendPriceAlert(
   currentPrice: number,
   direction: 'above' | 'below'
 ): Promise<void> {
-  const fromEmail = process.env.ALERT_FROM_EMAIL || 'alerts@cryptohub.app';
   const directionText = direction === 'above' ? 'acima de' : 'abaixo de';
   const formattedCurrent = currentPrice.toLocaleString('en-US', {
     style: 'currency',
@@ -78,9 +102,7 @@ export async function sendPriceAlert(
 </body>
 </html>`;
 
-  const r = getResend();
-  await r.emails.send({
-    from: fromEmail,
+  await sendEmail({
     to: email,
     subject: `🚨 Alerta BTC: Preço atingiu ${formattedCurrent}!`,
     html,
