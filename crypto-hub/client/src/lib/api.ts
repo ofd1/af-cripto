@@ -120,6 +120,27 @@ export const alertsApi = {
     fetchJSON<{ message: string }>(`/alerts/${id}`, { method: 'DELETE' }),
 };
 
+// Newsletter API
+export const newsletterApi = {
+  subscribe: (data: { email: string; frequency: 'daily' | 'weekly' }) =>
+    fetchJSON<{ message: string }>('/newsletter/subscribe', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  getLatest: () =>
+    fetchJSON<{
+      edition: {
+        title: string;
+        content_markdown: string;
+        content_html: string;
+        edition_date: string;
+      } | null;
+      static_content?: string;
+    }>('/newsletter/latest'),
+  getStats: () =>
+    fetchJSON<{ total: number; active: number; daily: number; weekly: number }>('/newsletter/stats'),
+};
+
 // Health check
 export const healthApi = {
   check: () =>

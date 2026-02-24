@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Newspaper, MessageSquare, Bell, Zap } from 'lucide-react';
+import { LayoutDashboard, Newspaper, MessageSquare, Bell, Zap, Mail } from 'lucide-react';
 import { BtcTicker } from './BtcTicker';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { to: '/news', label: 'Notícias', icon: Newspaper },
   { to: '/chat', label: 'Chat IA', icon: MessageSquare },
   { to: '/alerts', label: 'Alertas', icon: Bell },
+  { to: '/newsletter', label: 'Newsletter', icon: Mail },
 ];
 
 export function Sidebar() {

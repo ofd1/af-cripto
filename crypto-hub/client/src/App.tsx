@@ -5,6 +5,7 @@ import { Dashboard } from './pages/Dashboard';
 import { News } from './pages/News';
 import { Chat } from './pages/Chat';
 import { Alerts } from './pages/Alerts';
+import { Newsletter } from './pages/Newsletter';
 import { Login } from './pages/Login';
 import { authApi, getAuthToken } from './lib/api';
 
@@ -39,6 +40,7 @@ function App() {
           <Route path="news" element={<News />} />
           <Route path="chat" element={<Chat />} />
           <Route path="alerts" element={<Alerts />} />
+          <Route path="newsletter" element={<Newsletter />} />
         </Route>
       </Routes>
     </BrowserRouter>

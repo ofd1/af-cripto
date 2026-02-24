@@ -5,6 +5,7 @@ import { classifyNews } from '../services/aiService';
 import { savePriceHistory, fetchBtcPrice } from '../services/priceService';
 import { checkAlerts } from '../services/alertService';
 import { generateDailySummary } from '../services/aiService';
+import { sendNewsletter } from '../services/newsletterService';
 import pool from '../db/index';
 
 export function registerCronJobs(): void {
@@ -76,6 +77,26 @@ export function registerCronJobs(): void {
       await generateDailySummary();
     } catch (err) {
       console.error('[CRON] Daily summary error:', err);
+    }
+  });
+
+  // Send daily newsletter at 09:00 UTC (06:00 BRT)
+  cron.schedule('0 9 * * *', async () => {
+    console.log('[CRON] Sending daily newsletter...');
+    try {
+      await sendNewsletter('daily');
+    } catch (err) {
+      console.error('[CRON] Daily newsletter error:', err);
+    }
+  });
+
+  // Send weekly newsletter on Mondays at 09:00 UTC
+  cron.schedule('0 9 * * 1', async () => {
+    console.log('[CRON] Sending weekly newsletter...');
+    try {
+      await sendNewsletter('weekly');
+    } catch (err) {
+      console.error('[CRON] Weekly newsletter error:', err);
     }
   });
 

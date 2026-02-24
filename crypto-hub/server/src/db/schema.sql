@@ -49,3 +49,29 @@ CREATE TABLE IF NOT EXISTS btc_price_history (
   price_brl DECIMAL(12,2),
   recorded_at TIMESTAMP DEFAULT NOW()
 );
+
+-- Assinantes da newsletter
+CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  frequency VARCHAR(10) NOT NULL DEFAULT 'weekly' CHECK (frequency IN ('daily', 'weekly')),
+  is_active BOOLEAN DEFAULT true,
+  unsubscribe_token VARCHAR(64) NOT NULL,
+  confirmed_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_subscribers_active ON newsletter_subscribers(is_active) WHERE is_active = true;
+CREATE INDEX IF NOT EXISTS idx_subscribers_frequency ON newsletter_subscribers(frequency);
+CREATE INDEX IF NOT EXISTS idx_subscribers_token ON newsletter_subscribers(unsubscribe_token);
+
+-- Edições da newsletter (histórico)
+CREATE TABLE IF NOT EXISTS newsletter_editions (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(500) NOT NULL,
+  content_html TEXT NOT NULL,
+  content_markdown TEXT NOT NULL,
+  edition_date DATE NOT NULL,
+  sent_count INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT NOW()
+);

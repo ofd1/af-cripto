@@ -9,6 +9,7 @@ import newsRouter from './routes/news';
 import priceRouter from './routes/price';
 import alertsRouter from './routes/alerts';
 import aiRouter from './routes/ai';
+import newsletterRouter from './routes/newsletter';
 import { registerCronJobs } from './cron/fetchNews';
 import { fetchAllFeeds } from './services/rssService';
 import { fetchBtcPrice } from './services/priceService';
@@ -77,6 +78,11 @@ app.get('/api/auth/check', (req, res) => {
 // Auth middleware (after auth routes, before other API routes)
 app.use('/api', (req, res, next) => {
   if (req.path.startsWith('/auth') || req.path === '/health') return next();
+  if (
+    req.path === '/newsletter/subscribe' ||
+    req.path === '/newsletter/unsubscribe' ||
+    req.path === '/newsletter/latest'
+  ) return next();
   if (!SITE_PASSWORD) return next();
   const token = req.headers.authorization?.replace('Bearer ', '');
   if (token && (token === 'open' || validTokens.has(token))) return next();
@@ -106,6 +112,7 @@ app.use('/api/news', newsRouter);
 app.use('/api/price', priceRouter);
 app.use('/api/alerts', alertsRouter);
 app.use('/api/ai', aiRouter);
+app.use('/api/newsletter', newsletterRouter);
 
 // Serve static frontend
 const publicPath = path.join(__dirname, '../public');
