@@ -6,6 +6,7 @@ import { News } from './pages/News';
 import { Chat } from './pages/Chat';
 import { Alerts } from './pages/Alerts';
 import { Newsletter } from './pages/Newsletter';
+import { LandingPage } from './pages/LandingPage';
 import { Login } from './pages/Login';
 import { authApi, getAuthToken } from './lib/api';
 
@@ -35,6 +36,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="news" element={<News />} />
